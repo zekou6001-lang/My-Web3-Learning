@@ -1,0 +1,83 @@
+造出第一个 React 积木！
+第一步：定规矩
+用 interface 画一张表，名字叫 WalletProps。
+里面只需要一个信息：address（地址），类型是 string（文字）。
+第二步：造积木
+3. 用 function 造一个机器，名字叫 WalletCard。
+4. 投料口：接收 props，冒号后面贴上刚刚定的规矩 WalletProps。
+第三步：吐出网页
+5. 在机器肚子里，使用 return 吐出内容（别忘了 return 后面要有圆括号 ()）。
+6. 在圆括号里，写一个大纸箱 <div>。
+7. 在大纸箱里，写一段普通文字 <p>。
+8. <p> 标签里面写上中文：“当前连接的钱包是：”，然后打开任意门 {}，从 props 里面把 address 拿出来展示！
+
+// 1. 修正拼写
+interface WalletProps {
+  address: string;
+}
+function WalletCard(props: WalletProps) {
+  // 2. 修正拼写，并加上圆括号 () 把 HTML 牢牢抱住！
+  return (
+    <div>
+      <p>当前连接的钱包是: {props.address}</p>
+    </div>
+  );
+}
+
+网页的“动态记忆” —— useState
+把积木拼到“总底板”上 (App 组件)
+假设小积木 WalletCard 我们已经造好了。现在请你专门写那个总网页组件 App。
+造一个组件机器，名字叫 App（投料口不需要东西，留空括号 () 即可）。
+在机器肚子里，用 return () 吐出一个大纸箱 <div>。
+在纸箱里，先写一个 <h2> 标题，文字是：“Web3 转账系统”。
+在标题下面，召唤第一个积木：<WalletCard>，给它的 address 插槽传入你的钱包地址 "0xAAA111"。
+在下面，召唤第二个积木：<WalletCard>，给它的 address 插槽传入目标钱包地址 "0xBBB222"。
+
+function App() {
+  return (
+    <div>
+      <h2>Web3转账系统</h2>
+      {/* 注意看结尾的自闭合斜杠 /> */}
+      <WalletCard address="0xAAA111" />
+      <WalletCard address="0xBBB222" />
+    </div>
+  );
+}
+function ConnectWallet() {
+  // 1. 魔法状态盒子（初始值为 false）
+  const [isConnected, setIsConnected] = useState(________);
+
+  // 2. 点击时触发的机器
+  function connect() {
+    // 按下遥控器，把状态变成 true
+    ________(true);
+  }
+
+  return (
+    <div>
+      {/* 提示：我们用 {String(isConnected)} 把开关状态强行变成文字显示在屏幕上 */}
+      <p>当前连接状态：{String(isConnected)}</p>
+      
+      {/* 3. 给按钮通电！把 connect 机器塞进点击插槽 */}
+      <button onClick={________}>
+        连接钱包
+      </button>
+    </div>
+  );
+}
+function ConnectWallet() {
+  // 1. 正确拼写 useState 和 setIsConnected
+  const [isConnected, setIsConnected] = useState(false);
+  function connect() {
+    // 2. 准确调用遥控器
+    setIsConnected(true);
+  }
+  return (
+    <div>
+      {/* 3. 大写的 String */}
+      <p>当前连接状态：{String(isConnected)}</p>
+      {/* 4. 加上等号 =，并把文字包在 button 中间 */}
+      <button onClick={connect}>连接钱包</button>
+    </div>
+  );
+}
