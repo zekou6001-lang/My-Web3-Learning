@@ -1,0 +1,104 @@
+模拟一个“实时币价显示器”
+
+function PriceTracker() {
+  const [price,setPrice] = useState(0)
+  useEffect( () => {
+    async function getPrice() {
+      const currenPrice = 60000;
+      setprice(currentPrice);
+    }
+    getPrice();
+  },[] );
+  return (
+    <div>
+      <h2>当前比特币价格：{price}</h2>
+    </div>
+  );
+}
+
+自动执行的“监视器” —— useEffect
+Web3 真实战场 —— 异步数据 (Async/Await)
+function Web3App() {
+  
+  // ==========================================
+  // 🍔 第一层：准备记忆盒子 (useState)
+  // ==========================================
+  const [price, setPrice] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
+
+
+  // ==========================================
+  // 🍔 第二层：自动动作与监控 (useEffect & 普通函数)
+  // ==========================================
+  
+  // 动作 A：开机自动查币价
+  useEffect(() => {
+    async function getPrice() {
+      const currentPrice = 60000; 
+      setPrice(currentPrice); // 拿到数据，按遥控器！
+    }
+    getPrice();
+  }, []); // 空括号：只在开机执行一次
+
+  // 动作 B：点击按钮连接钱包
+  function connect() {
+    setIsConnected(true); // 用户点击了，按遥控器！
+  }
+
+  // ==========================================
+  // 🍔 第三层：画出网页 (return)
+  // ==========================================
+  return (
+    <div>
+      <h2>当前比特币价格：{price}</h2>
+      <p>钱包连接状态：{String(isConnected)}</p>
+      <button onClick={connect}>连接钱包</button>
+    </div>
+  );
+useEffect (下单动作)：你走进办公室，第一件事就是点外卖。你不想每隔 5 分钟就点一次，所以用 useEffect 规定只点一次。
+async/await (等外卖)：外卖员（区块链）在路上跑，你不用在大门口死等，你可以继续回工位干活。
+useState 遥控器 (外卖送到)：外卖送到了，你大喊一声“外卖到了！”，全办公室的人都知道可以吃饭了（网页刷新了）。
+
+第十八阶段：翻译官与魔法遥控器 (Viem & Wagmi)
+
+观察组件 RealWalletProfile。
+在第一层（记忆区），使用 Wagmi 的神奇遥控器 useAccount()。
+用一个大括号 {}（档案袋），接住它吐出来的两个真实数据：address 和 isConnected。
+在第三层（展示区），如果 isConnected 是 true，请展示出真实的 address.
+
+import { useAccount } from 'wagmi';
+function RealWalletProfile() {
+  // 1. 重点在这里！用大括号 {} 把档案袋里的东西拿出来
+  const { address, isConnected } = useAccount();
+  return (
+    <div>
+      <h2>我的真实 Web3 身份</h2>
+      {/* 2. 把 isConnected 变量放进任意门 */}
+      <p>是否已连接：{String(isConnected)}</p>
+      {/* 3. 把 address 变量放进任意门 */}
+      <p>钱包地址：{address}</p>
+    </div>
+  );
+}
+
+第十九阶段：网页的“变脸”魔法 —— 条件渲染 (三元运算符)
+
+用 Wagmi 的 useAccount() 拿到 isConnected 和 address。
+在 <div> 纸箱里，打开任意门 {}，写出你的“问号/冒号”魔法。
+条件：isConnected。
+如果成立（已连接）：画一个 <p>，里面显示 address。
+如果不成立（未连接）：画一个 <button>，文字是“连接小狐狸钱包”。
+import { useAccount } from 'wagmi';
+function Web3Navbar() {
+  const { isConnected, address } = useAccount();
+  return (
+    <nav>
+      {/* 完美的问号与冒号魔法，中间绝对不能有分号！ */}
+      { isConnected ? 
+        ( <p>我的地址：{address}</p> ) 
+        : 
+        ( <button>连接小狐狸钱包</button> ) 
+      }
+    </nav>
+  );
+}
