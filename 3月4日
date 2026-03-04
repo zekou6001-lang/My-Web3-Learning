@@ -1,0 +1,111 @@
+第二十阶段：从一列“数据火车”到一排“网页卡片”
+么把一个装满代币名字的数组 ["ETH", "USDT", "SOL"]，瞬间变成网页上的三行字呢？
+
+核心秘籍：打开任意门 {}，把火车开上流水线 map，然后吐出网页集装箱！
+假设你通过 Wagmi 从以太坊上拉取到了你拥有的 3 个 NFT 的名字，装在一个叫 myNFTs 的数组里。
+任务步骤：
+观察下面的 NFTGallery 组件骨架。
+在任意门 {} 里，让 myNFTs 火车进入 .map 流水线。
+流水线每次抓取一个 NFT（名字叫 nftName），以及它的序号（名字叫 index）。
+在 return 里，吐出一个 <div> 纸箱。
+极其关键：给这个 <div> 纸箱贴上 key 标签，内容是 index。
+在纸箱里面，用一个 <h4> 标签展示 nftName。
+function NFTGallery() {
+  const myNFTs = ["无聊猿 #1024", "加密朋克 #888", "胖企鹅 #666"];
+
+  return (
+    <div>
+      <h2>我的 NFT 画廊</h2>
+  
+      {/* 1. 加上 map 开启流水线 */}
+      { myNFTs.map((nftName, index) => {
+          return (
+            // 2. key 贴得非常完美！
+            <div key={index}>
+              {/* 3. 加上大括号 {}，把变量拿出来 */}
+              <h4>{nftName}</h4>
+            </div>
+          );
+      }) }
+      
+    </div>
+  );
+}
+
+第二十一阶段：让网页听你的话 —— 输入框与状态绑定
+在传统的网页里，用户在输入框里打字，网页就像个“聋子”，代码根本不知道用户写了啥。
+在 React 里，我们通过一个叫 “双向绑定” 的魔法，让输入框和 useState 盒子紧紧锁在一起。
+💡 核心秘籍：value 和 onChange 的双剑合璧
+要在 React 里控制一个输入框，你需要给 <input> 标签塞进两个插槽：
+value（显示插槽）：规定输入框里显示的文字，必须是盒子里的数据。
+onChange（变化报警器）：只要用户敲击键盘改变了文字，立刻按下遥控器，把新文字装进盒子里！
+
+（打造转账金额输入框）
+现在，我们要为接下来的 Web3 转账功能打下基础。我们要写一个输入框，专门让用户填写要发送的 ETH（以太坊）数量。
+
+任务步骤：
+观察 TransferInput 组件。
+里面已经用 useState 准备好了一个叫 amount 的盒子，和叫 setAmount 的遥控器。
+请在 <input> 的 value 插槽里，填入盒子名字。
+请在 onChange 插槽的指令里，使用遥控器，把 e.target.value 存进去。
+
+import { useState } from 'react';
+
+function TransferInput() {
+  const [amount, setAmount] = useState("");
+
+  return (
+    <div>
+      <h3>准备发送的 ETH 数量：{amount}</h3>
+      <input
+        type="text"
+        placeholder="请输入数字，例如 0.5"
+        
+        // 1. 剑刃一：绑定盒子
+        value={amount}
+        
+        // 2. 剑刃二：敲击键盘时，用正确的遥控器存下最新输入
+        onChange={(e) => {
+          setAmount(e.target.value);
+        }}
+      />
+    </div>
+  );
+}
+
+第二十二阶段：向区块链查账 —— useBalance
+还我们为了查个虚拟的币价，手写了 useEffect 和 async 吗？
+今天，有了 useBalance，这一切都被压缩成了一句话。
+💡 核心档案袋：它怎么工作？
+useBalance 需要你告诉它：“你要查谁的账？”
+所以，我们必须把 useAccount 拿到的地址，塞进 useBalance 的肚子里。
+真正的 Web3 资产卡片）
+现在，要把“连接状态”、“钱包地址”和“真实余额”全部组装在一个组件里！
+任务步骤：
+观察 MyAsset 组件。
+用 useAccount() 抽出 isConnected 和 address。
+把抽出来的 address，放进 useBalance 的查询条件里。
+在网页展示区，使用“防弹衣”语法，把余额数字（formatted）展示出来。
+
+// 1. 修正拼写 import
+import { useAccount, useBalance } from 'wagmi';
+function MyAsset() {
+  const { isConnected, address } = useAccount();
+  // 2. 修正拼写 const
+  const { data } = useBalance({ address: address });
+  return (
+    <div>
+      <h2>我的资产保险箱</h2>
+      {isConnected ? (
+        <div>
+          {/* 3. 严格使用小写的 address 和 <p> */}
+          <p>地址：{address}</p>
+          {/* 4. 穿上防弹衣 data?.formatted，防止网页崩溃！ */}
+          <p>余额：{data?.formatted} ETH</p>
+        </div>
+      ) : (
+        <p>请先连接钱包！</p>
+      )}
+    </div>
+  ); // 5. 使用英文分号
+}
