@@ -1,0 +1,278 @@
+第二十三阶段：让钱跑起来 —— 发起真实转账 (useSendTransaction)
+前面我们用的 useAccount（看地址）和 useBalance（看余额），都属于**“只读操作”**。这就像你在银行大堂的 ATM 机上查余额，不需要大堂经理签字。
+但现在，我们要**“写操作”**了——我们要把 ETH 从你的钱包里，真实地发送给另一个人！这就好比你要在银行柜台递交一份“转账单”，这需要极其严格的授权。
+为此，Wagmi 给我们提供了一台最强大的机器：useSendTransaction（转账发射器）。
+💡 核心秘籍：转账发射器 + 单位翻译官
+要完成一笔转账，我们需要准备两样东西：
+转账发射器（sendTransaction）：负责唤醒你的小狐狸钱包，弹出那个让你点击“确认”的付款界面。
+单位翻译官（parseEther）：这是个新朋友。因为区块链非常底层，它不认识“0.1 个 ETH”这种人类语言，它只认识最小单位“Wei”（1 个 ETH = 10 的 18 次方个 Wei）。parseEther 的工作，就是把你输入的 "0.1"，瞬间翻译成区块链能看懂的带了一大串 0 的天文数字。
+
+观察 TransferConsole 组件。
+里面已经有了一个 amount 盒子来记住用户输入的数字。
+请引入转账发射器，抽出 sendTransaction。
+在发送机器里，给 to 插槽填上目标地址。
+在 value 插槽里，用翻译官 parseEther 把用户输入的 amount 盒子翻译过去。
+
+import { useState } from 'react';
+import { useSendTransaction } from 'wagmi';
+import { parseEther } from 'viem';
+
+function TransferConsole() {
+  // 记住用户输入的数字
+  const [amount, setAmount] = useState("");
+  
+  // 1. 抽出转账发射器
+  const { ________ } = useSendTransaction();
+
+  function executeTransfer() {
+    // 2. 执行发射动作
+    sendTransaction({
+      // 假设我们要转给这个老王的地址
+      to: "0x9999999999999999999999999999999999999999", 
+      
+      // 3. 使用翻译官，把 amount 盒子里的字翻译给区块链
+      value: parseEther(________) 
+    });
+  }
+
+  return (
+    <div>
+      <h2>高级转账控制台</h2>
+      
+      {/* 这里的输入框逻辑你已经很熟了 */}
+      <input 
+        type="text" 
+        value={amount} 
+        onChange={(e) => setAmount(e.target.value)} 
+        placeholder="输入转账数量"
+      />
+      
+      {/* 4. 给按钮通电！塞入执行机器 */}
+      <button onClick={________}>
+        立刻发送！
+      </button>
+    </div>
+  );
+}
+
+import { useState } from 'react';
+import { useSendTransaction } from 'wagmi';
+import { parseEther} from 'viem';
+function SafeTransferConsole() {
+  const [amount,setAmount] = useState("");
+  const { sendTransaction,parseEther } = useSendTransaction();
+  function executeTransfer () {
+    sendTransaction({
+      to:"0x9999999999999999999999999999999999999999",
+      value:parseEther(amount)
+    });
+  }
+  return (
+    <div>
+      <h2>安全转账控制台</h2>
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        placeholder="输入的转账数量"
+        />
+        <button
+          onClick={executeTransfer}
+          disabled={isPending}
+          >
+          {isPending ? "请在钱包确认..." ： "立刻发送！"}
+        </button>
+    </div>
+  )；
+}
+
+第二十四阶段：掌控时间 —— 交易等待状态 (isPending)
+还记得昨天 Wagmi 返回的那个装满数据的“档案袋” {} 吗？
+之前，我们只从 useSendTransaction 的档案袋里抽出了 sendTransaction（发射按钮）。但其实，Wagmi 在这个袋子里还极其贴心地为你准备了一个**“状态监控灯”**，它叫 isPending。
+💡 isPending 的魔
+isPending 是一个开关（Boolean），它的值只能是 true 或 false。
+当你还没点按钮时，它是 false。
+当你点下按钮，小狐狸钱包弹出来让你确认，直到转账发送到网络上的这段时间，Wagmi 会自动把它变成 true！
+发送结束后，它又会自动变回 false。
+
+防手抖的安全转账台
+为转账控制台加上这道“安全锁”！
+任务步骤：
+在抽出 sendTransaction 的同时，把 isPending 也一起从档案袋里抽出来。
+在底部的 <button> 标签里，找到 disabled 插槽，把 isPending 填进去锁死按钮。
+在按钮的文字区域，使用 {} 打开任意门，写一个“变脸魔法”：如果 isPending 为真，显示 "请在钱包确认..."；如果为假，显示 "立刻发送！"。
+
+代码：
+// 引入 React 的记忆盒子魔法
+import { useState } from 'react';
+// 引入 Wagmi 的转账机器
+import { useSendTransaction } from 'wagmi';
+// 引入单位翻译官
+import { parseEther } from 'viem';
+
+function SafeTransferConsole() {
+  // 1. useState: 造一个名叫 amount 的盒子来记住用户输入的数字，初始值为空字符串 ""。
+  //    setAmount 是用来修改这个数字的专属遥控器。
+  const [amount, setAmount] = useState("");
+
+  // 2. useSendTransaction: 从 Wagmi 的转账机器中抽出两样东西：
+  //    sendTransaction (发射按钮) 和 isPending (一个状态灯：如果是 true 说明正在转账中)。
+  const { sendTransaction, isPending } = useSendTransaction();
+
+  // 3. executeTransfer: 我们自己造的执行发射的机器，只在用户点击发送时触发。
+  function executeTransfer () {
+    // 4. 按下 Wagmi 的发射按钮，并交出一个包含转账信息的档案袋 {}。
+    sendTransaction({
+      // 5. to: 告诉以太坊网络你要把钱打给哪个地址。
+      to: "0x9999999999999999999999999999999999999999",
+      // 6. value: 把用户输入的 amount 盒子里的文字，用翻译官翻译成区块链认识的天文数字。
+      value: parseEther(amount)
+    });
+  }
+
+  // 7. return: 开始画出网页的集装箱大纸箱。
+  return (
+    <div>
+      {/* 8. 画一个二级标题 */}
+      <h2>安全转账控制台</h2>
+      
+      {/* 9. 画一个输入框 */}
+      <input
+        // 10. type: 告诉网页这是一个可以输入普通文字的框。
+        type="text"
+        // 11. 【双向绑定剑刃一】：输入框里显示的文字，必须和 amount 盒子里的数据严格一致。
+        value={amount}
+        // 12. 【双向绑定剑刃二】：每当用户敲击键盘 (e)，就立刻按遥控器 (setAmount) 把新字存进盒子里。
+        onChange={(e) => setAmount(e.target.value)}
+        // 13. placeholder: 用户还没打字时，显示的灰色提示文字。
+        placeholder="输入的转账数量"
+      />
+      
+      {/* 14. 画一个发送按钮 */}
+      <button
+        // 15. onClick: 当按钮被点击时，启动上方的 executeTransfer 发射机器。
+        onClick={executeTransfer}
+        // 16. disabled【安全锁】：把 isPending 状态灯插进来。转账中为 true，按钮立刻变灰不可点。
+        disabled={isPending}
+      >
+        {/* 17. 【变脸魔法】：打开任意门 {} 判断：isPending 是真的吗？
+                如果是 (true)，显示 "请在钱包确认..."；
+                否则 (false)，显示 "立刻发送！" */}
+        {isPending ? "请在钱包确认..." : "立刻发送！"}
+      </button>
+    </div>
+  ); 
+}
+
+import { useState } from 'react';
+import {useSendTransaction } from 'wagmi';
+import { parseEther } from 'viem';
+function UltimaTransfer() {
+  const [amount,setAmount] = useState("")
+  const {sendTransaction,isPending,isSuccess } =useSendTransaction();
+  function executeTransfer () {
+    sendTransaction({
+      to:"0x9999999999999999999999999999999999999999",
+      value:parseEther(amount)
+    });
+  }
+  return(
+    <div>
+      <h2>终极安全转账控制台</h2>
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => set（e.target.value)}
+        placeholder="输入的转账数量"
+        />
+        <button
+          onChange={executeTransfer}
+          disabled={isPending}
+          >
+          {isPending ? "请在钱包确认..." : "立刻发送！"}
+          </button>
+          {isSuccess&& (
+        <p style={{ color: 'green', fontWeight: 'bold' }}>
+        </p> 
+      )}
+    </div>
+  );
+}
+
+第二十五阶段：闭环体验 —— 捕捉“转账成功” (isSuccess)
+在上一节，我们成功用 isPending（等待中）锁死了按钮，防止用户手抖连点。
+但这还不够完美。当 15 秒后，区块链打包完成，转账真正成功了，网页必须要给用户一个明确的反馈（比如弹出一句“✅ 转账成功，撒花！”）。否则用户依然会陷入迷茫。
+💡 核心秘籍：档案袋里的第三件法宝 isSuccess
+和 isPending 一样，Wagmi 的发射器 useSendTransaction 的档案袋里，还装着一个专门报告喜讯的状态灯：isSuccess。
+刚开始：isSuccess 是 false。
+交易在链上排队时：isSuccess 依然是 false（此时 isPending 是 true）。
+交易在链上被打包确认后：isSuccess 瞬间变成 true！
+🛠️ 极客的新魔法：单向开关 && (逻辑与)
+之前我们学了变脸魔法（三元运算符 ? :），用来做“非 A 即 B”的选择。
+但在这里，我们的需求是：如果成功了，就显示一行字；如果没成功，什么都不显示。
+对于这种“单向需求”，React 提供了一个更极简的魔法：&&（并且）。
+
+TypeScript
+// 语法公式： { 条件 && 成立时显示的网页 }
+// 极客的大白话翻译：“只有前面的条件是真的，才准把后面的网页画出来！”
+{ isSuccess && <p>🎉 恭喜！转账已成功上链！</p> }
+
+打造拥有完美反馈的转账台
+极客，现在我们要把你的转账控制台升级到真正的“商业可用”级别。我们要同时处理“输入”、“等待（锁死）”和“成功反馈”。
+
+任务步骤：
+
+观察 UltimateTransfer 组件。
+从 Wagmi 的 useSendTransaction 档案袋里，同时抽出三个东西：sendTransaction（发射器）、isPending（等待灯）、isSuccess（成功灯）。
+使用单向开关 &&，在按钮的下方，画出当 isSuccess 为 true 时才显示的成功提示语。
+
+import { useState } from 'react';         // 从 React 仓库拿“记忆盒子”
+import { useSendTransaction } from 'wagmi'; // 从 Wagmi 仓库拿“转账机器”
+import { parseEther } from 'viem';        // 从 Viem 仓库拿“单位翻译官”
+function UltimaTransfer() {
+  // 1. 造一个名叫 amount 的盒子，初始值是空字符串 ""。用 setAmount 来修改它。
+  // 这个盒子专门用来装用户在网页上输入的金额。
+  const [amount, setAmount] = useState("");
+  
+  // 2. 启动 Wagmi 转账机器，从它的肚子里抽出三个极客法宝：
+  // sendTransaction (发射按钮)、isPending (正在发送的红灯)、isSuccess (发送成功的绿灯)
+  const { sendTransaction, isPending, isSuccess } = useSendTransaction();
+  // 3. 我们自己造一个名叫 executeTransfer 的动作机器
+  function executeTransfer () {
+    // 只要这台机器被启动，它就会狠狠按下 Wagmi 的发射按钮，并递交一份转账单：
+    sendTransaction({
+      to: "0x9999999999999999999999999999999999999999", // 钱打给谁
+      value: parseEther(amount) // 打多少钱 (把 amount 盒子里的数字翻译给区块链)
+    });
+  }
+  // 4. 开始画网页大纸箱
+  return(
+    <div>
+      <h2>终极安全转账控制台</h2>
+      
+      {/* 零件A：输入框 */}
+      <input
+        type="text" 
+        value={amount} // 框里显示的字 = amount 盒子里的字
+        onChange={(e) => setAmount(e.target.value)} // 用户每敲一个键盘，就把新字塞进盒子
+        placeholder="输入的转账数量"
+      />
+      
+      {/* 零件B：发送按钮 */}
+      <button
+        onClick={executeTransfer} // 【核心】被点击时，通电启动 3号车间的 发射机器！
+        disabled={isPending}      // 如果正在转账 (isPending为真)，就锁死按钮防止连点
+      >
+        {/* 如果正在转账，按钮文字变成"确认中"；否则显示"发送" */}
+        {isPending ? "请在钱包确认..." : "立刻发送！"}
+      </button>
+      
+      {/* 零件C：成功提示 (只有当绿灯 isSuccess 亮起时，才画出这个 <p> 标签) */}
+      {isSuccess && (
+        <p style={{ color: 'green', fontWeight: 'bold' }}>
+          ✅ 转账大获成功！
+        </p> 
+      )}
+    </div>
+  );
+}
