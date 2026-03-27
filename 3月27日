@@ -1,0 +1,136 @@
+HTML框架与标签
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>框架标签</title>
+</head>
+<body>
+   
+    <!--利用iframe 嵌入一个网页-->
+    <iframe src="http://www.google.com" width="900" height="300" frameboder="0"></iframe>
+    <!--利用iframe 嵌入一个广告网页-->
+    <iframe width="" height="" src=""></iframe>
+    <!--利用iframe 嵌入其他内容-->
+    <iframe src="./自由之翼.png" width="600" height="500" frameborder="0"></iframe>
+    <!--与超链接的target属性配合使用-->
+    <a href="http://www.google.com" target="gg">点我看新闻</a><br>
+    <iframe name="gg" frameborder="0" width="300" height="900"></iframe>
+    <!--与表单的target属性配合使用-->
+    <form action ="http://www.google.com/search" target="container">
+        <input type="text" name="keyword">
+        <input type="submit" value="搜索">
+    </form>
+    <iframe name="container" frameborder="0" width="900" height="300"></iframe>
+</body>
+</html>
+
+HTML字符实体
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div> 我 亿万富翁</div>
+    <div>我&nbsp;&nbsp;&nbsp;亿万富翁</div>
+    <div>我&#160;亿万富翁</div>
+    <div>我们学习过很多标签其中&lt;h1&gt;是最厉害的一个！</div>
+    <div>我们今天学习了一可以表示空格的字符实体，它是&amp;nbsp;</div>
+    <div>我们今天学习了一可以表示&的字符实体，它是&amp;amp;</div>
+    <div>当前得到商品价格是：&yen;199</div>
+    <div>&copy;版权所有</div>
+    <div>2&times;2=4</div>
+    <div>2&divide;2=1</div>
+</body>
+</html>
+
+HTML全局属性
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全局属性</title>
+</head>
+<body>
+    <div id="hello1">你好啊！</div>
+    <div id="hello2">你好啊2</div>
+    <div class="student">张三</div>
+    <div class="student">李四</div>
+    <div style="color:green">旺财</div>
+    <bdo dir="rtl">你是年少的欢喜</bdo>
+    <div dir="rtl">你是年少的欢喜</div>
+    <div title="英雄联盟">LOL</div>
+    <a href="http://www.google.com" title="去谷歌">去谷歌</a>
+</body>
+</html>
+
+HTML网页里的meta元信息
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="网上购物，电商购物，皮鞋，化妆品">
+    <meta name="description" content="网站致力于服务玩家"> 
+    <meta http-equiv="refresh" content="3">
+    <title>Document</title>
+</head>
+<body>
+    <h1>你好啊</h1>
+</body>
+</html>
+
+CSS行内样式
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="color: red; font-size: 26px;">欢迎来到我的世界</h1>
+</body>
+</html>
+
+CSS内部样式
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1 {
+            color: red; 
+            font-size: 26px;
+        }
+        h2 {
+            color: yellow;
+            font-size: 35px;
+        }
+        p {
+            color: aqua;
+            font-size: 20px;
+        }
+        img {
+            width: 299px;
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎来到我的世界</h1>
+    <h2>你的梦想是什么？</h2>
+    <p>我的世界在这里</p>
+    <p>我的世界在这里</p>
+    <p>我的世界在这里</p>
+    <p>我的世界在这里</p>
+    <p>我的世界在这里</p>
+    <img src="XUEXIHTML/亿万富翁.jpg" alt="亿万富翁">
+</body>
+</html>
