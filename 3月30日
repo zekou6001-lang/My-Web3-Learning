@@ -1,0 +1,151 @@
+通配选择器：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            color:aquamarine;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎来到我的新世界</h1>
+    <br>
+    <h2>世界概要</h2>
+    <h3>主题讲解：人人都是最棒的</h3>
+    <p>我们可以可以教大家学习</p>
+    <p>所有的知识都是免费的</p>
+    <p>但是要依靠自己主动学习</p>
+</body>
+</html>
+
+元素选择器：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h2{
+            color:chocolate;
+        }
+        h3{
+            color: aqua;
+        }
+        p{
+            color:rgb(35, 20, 2);
+        }
+        h1{
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎来到我的新世界</h1>
+    <br>
+    <h2>世界概要</h2>
+    <h3>主题讲解：人人都是最棒的</h3>
+    <p>我们可以可以教大家学习</p>
+    <p>所有的知识都是免费的</p>
+    <p>但是要依靠自己主动学习</p>
+    <br>
+    <h2>系统概要</h2>
+    <h3>系统的知识</h3>
+    <p>第一节</p>
+    <p>第二节</p>
+    <p>第三节</p>
+</body>
+</html>
+
+类选择器：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 选中页面中所有类名为speak的元素 */
+        .speak {
+            color:blueviolet;
+        }
+        /* 选中页面中所有类名为answer的元素 */
+        .answer {
+            color:aqua;
+        }
+         .big {
+            font-size: 40px;
+         }
+    </style>
+</head>
+<body>
+    <h1>欢迎来到我的新世界</h1>
+    <br>
+    <h2>世界概要</h2>
+    <h3>主题讲解：人人都是最棒的</h3>
+    <p class="speak big">首先：我们可以教大家学习</p>
+    <p class="speak">首先：所有的知识都是免费的</p>
+    <p class="speak">首先：但是要依靠自己主动学习</p>
+    <br>
+    <h2>系统概要</h2>
+    <h3>系统的知识</h3>
+    <p class="answer">其次：第一节</p>
+    <p class="answer">其次：第二节</p>
+    <p class="answer">其次：第三节</p>
+</body>
+</html>
+
+id选择器：
+官位排行”**，这决定了当代码冲突时谁说了算：
+
+1.  **ID 选择器 (#)**：最高级（像省长，全国唯一）。
+2.  **类选择器 (.)**：次之（像市长，可以有很多个）。
+3.  **元素选择器 (h1/p)**：最低级（像平民）。
+
+> **举例**：如果你给一个标签同时设了 `#id` 为蓝色和 `.class` 为红色，它最终会显示**蓝色**。
+
+官位排行决定了当代码冲突时谁说了算：
+
+1.  **ID 选择器 (#)**：最高级（像省长，全国唯一）。
+2.  **类选择器 (.)**：次之（像市长，可以有很多个）。
+3.  **元素选择器 (h1/p)**：最低级（像平民）。
+
+> **举例**：如果你给一个标签同时设了 `#id` 为蓝色和 `.class` 为红色，它最终会显示**蓝色**。
+
+交集选择器：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .rich {
+            color:gold;
+        }
+        .beauty {
+            color: red;
+        }
+        /* p元素且类名为beauty */
+        p.beauty {
+            color:aqua;
+        }
+        .rich.beauty {
+            color:orange;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="rich">土豪张三</h2>
+    <h2 class="beauty">明星李四</h2>
+    <h2 class="rich beauty">土豪明星王五</h2>
+    <br>
+    <p class="beauty">小狗旺财</p>
+    <p class="beauty">小猪佩奇</p>
+</body>
+</html>
